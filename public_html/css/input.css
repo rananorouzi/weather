@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#right_col{
+    position : relative;
+}
+.temp_chose {
+    top : 10px;
+    right : 10px;
+}
+.daily_forecast svg, .div_center{
+    margin: 0 auto;
+}
