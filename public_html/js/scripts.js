@@ -153,7 +153,7 @@ function formatParams( params ){
             .join('&')
 }
 function formatDateToMonthDay(date){
-    if(typeof date == 'undefined' || date == ''){
+    if((typeof date != 'string' ||  date == '') && typeof date != 'number' ){
         return '';
     }
     var d = new Date(date);

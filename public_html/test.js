@@ -58,11 +58,19 @@ it('Test params on formatParams', function() {
 
     assertEqual('',result);
 });
-it('Test formatParams with all valid parameters', function() {
+
+it('Test formatParams with valid parameter', function() {
     var myObject = {key:'val'};
 
     var result = formatParams(myObject);
     assertEqual('?key=val',result);
+});
+
+it('Test formatParams with valid parameters', function() {
+    var myObject = {key:'val', key2:'val2'};
+
+    var result = formatParams(myObject);
+    assertEqual('?key=val&key2=val2',result);
 });
 
 
@@ -72,10 +80,18 @@ it('Test params on formatDateToMonthDay', function() {
 
     assertEqual('',result);
 });
+
 it('Test formatDateToMonthDay with all valid parameters', function() {
 
     var result = formatDateToMonthDay(13980506134521);
 
     assertEqual('9 January - 11:00',result);
+});
+
+it('Test formatDateToMonthDay with invalid parameters', function() {
+
+    var result = formatDateToMonthDay({date:1481255});
+
+     assertEqual('',result);
 });
 
