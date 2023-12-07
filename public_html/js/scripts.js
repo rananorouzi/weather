@@ -254,7 +254,6 @@ function fetchWeatherData(temp){
             var hTimes = data['hourly']['time'];
             for (var h in hTimes) {
                 hourlyData[h] = [formatDateToMonthDay(hTimes[h]), data['hourly']['temperature_2m'][h]]
-                i++;
             }
             createCurrentWeatherHTML(currentWeather);
             createChart(hourlyData);

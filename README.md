@@ -15,10 +15,10 @@ This page is responsive and can be shown correctly in every screen size.
 - Tailwindcss version 3.3.5
 - Highcharts version v11.2.0
 
-### Scripts functions
+### Script functions
 
 - fetchWeatherData
-    - This function, is the main task on the page. It would be called when the page is loaded or when user refresh or ask for another unit of temperature.
+    - This function, is the main task on the page. It would be called when the page is loaded or when the user refreshes or asks for another unit of temperature.
     - Parameters
         - temp : temperature unit. It can be `c` or `f`. Invalid input is considered as `c` .
         
@@ -26,14 +26,14 @@ This page is responsive and can be shown correctly in every screen size.
     - This function gets the URL and its parameters, then returns its response.
     - return boolean
     - Parameters
-            - theUrl : a url (string) that needs to be fetched
+            - theUrl : a URL (string) that needs to be fetched
             - params : all parameters for URL as an object
-            - callback : function that should be executed as a callback for GET
+            - callback : a function that should be executed as a callback for GET
 - formatParams
     - This function gets an object of parameters and converts it to a string and valid format for URL.
     - return string
     - Parameters
-        - params : an object of all parameters of url. keys are names and values are value of parameters. 
+        - params : an object of all parameters of url. keys are names and values are values of parameters. 
             - example
                 ```
                   {
@@ -47,7 +47,7 @@ This page is responsive and can be shown correctly in every screen size.
                 ```
 - createDailyWeatherHTML
     - This function gets the daily part of the GET response and creates HTML based on it.
-    - Parametes
+    - Parameters
         - weatherData : object contains daily forecast.
           - example
             ```javascript
@@ -260,10 +260,10 @@ This page is responsive and can be shown correctly in every screen size.
                 ]
                 ```
 - createTodayDate
-    - This function returns today date and current time
+    - This function returns today's date and current time
     - return string
 - formatDateToMonthDay
-    - This function returns formatted date
+    - This function returns the formatted date
     - return string
     - Parameter
         - date (date string)
@@ -272,14 +272,14 @@ Just open index.html in a web browser.
 
 ### How to test
 
-Tests are defined test.js file. these tests are for following functions:
+Tests are defined test.js file. these tests are for the following functions:
 - httpGetAsync
 - formatParams
 - formatDateToMonthDay
 
-other functions manipulate HTML base of result of these functions.
+other functions manipulate HTML based on the result of these functions.
 
-you can run the test by opening test.html on the browser. Result prints in Console log. sample result is in a picture below:
+you can run the test by opening test.html on the browser. The result prints in the Console log. A sample result is in the picture below:
 
 ![test result sample](public_html/test_sample.png "Test Result Sample").
 
@@ -288,5 +288,5 @@ you can run the test by opening test.html on the browser. Result prints in Conso
 - Choose an area to get its weather forecast
 - Show hourly temperature and weather conditions for the next seven days with a click on the day
 - The ability to change the default temperature unit for the user
-- Keep the current tempreture unit when the user refresh the page content
+- Keep the current temperature unit when the user refreshes the page content
 - Implement the app using React.js
