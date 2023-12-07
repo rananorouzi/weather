@@ -122,12 +122,15 @@ const weatherCodes = {
 function httpGetAsync(theUrl, params, callback)
 {
     var paramString = '';
-    if(theUrl == '' || typeof theUrl == 'undefined' || callback == '' || typeof callback == 'undefined'){
+    if(theUrl == '' || typeof theUrl != 'string' || callback == '' || typeof callback == 'undefined'){
         return false;
     }
-    if(params != ''){
+    if(typeof params == 'object'){
         paramString = formatParams(params);
+    }else if(params != ''){
+        return false;
     }
+
     var urlGetString = theUrl+paramString;
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
@@ -148,6 +151,22 @@ function formatParams( params ){
                 return key+'='+encodeURIComponent(params[key])
             })
             .join('&')
+}
+function formatDateToMonthDay(date){
+    if(typeof date == 'undefined' || date == ''){
+        return '';
+    }
+    var d = new Date(date);
+    var dateFormatted = d.getDate()+ ' ' + d.toLocaleString('default', { month: 'long' });
+    var hour = d.getHours();
+    return dateFormatted +' - '+ hour+':00';
+}
+function createTodayDate() {
+    var objToday = new Date();
+    var date = objToday.toDateString();
+    var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var dayOfWeek = weekday[objToday.getDay()];
+    return dayOfWeek+', '+objToday.getHours()+':'+objToday.getMinutes();
 }
 
 function fetchWeatherData(temp){
@@ -229,16 +248,13 @@ function fetchWeatherData(temp){
                     };
 
                 }
-
                 createDailyWeatherHTML(weekWeather);
             }
             var hourlyData = [];
             var hTimes = data['hourly']['time'];
             for (var h in hTimes) {
-
                 hourlyData[h] = [formatDateToMonthDay(hTimes[h]), data['hourly']['temperature_2m'][h]]
                 i++;
-
             }
             createCurrentWeatherHTML(currentWeather);
             createChart(hourlyData);
@@ -247,15 +263,8 @@ function fetchWeatherData(temp){
         }
     });
 }
-function formatDateToMonthDay(date){
-    if(typeof date == 'undefined' || date == ''){
-        return '';
-    }
-    var d = new Date(date);
-    var dateFormatted = d.getDate()+ ' ' + d.toLocaleString('default', { month: 'long' });
-    var hour = d.getHours();
-    return dateFormatted +' - '+ hour+':00';
-}
+
+
 function createDailyWeatherHTML(weatherData){
     if(typeof weatherData == 'object'){
         var html = '<section class="daily_forecast_container"><header class="w-full text-black font-sans text-x2 font-bold self-center mb-3">Weekly Highlight</header>' +
@@ -306,13 +315,6 @@ function createDailyWeatherHTML(weatherData){
     }else{
         document.getElementById('week').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3 w-full">Fetch weekly data is failed. please try again!</div>';
     }
-}
-function createTodayDate() {
-    var objToday = new Date();
-    var date = objToday.toDateString();
-    var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    var dayOfWeek = weekday[objToday.getDay()];
-    return dayOfWeek+', '+objToday.getHours()+':'+objToday.getMinutes();
 }
 function createCurrentWeatherHTML(weatherData){
     if(typeof weatherData == 'object'){

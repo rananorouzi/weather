@@ -270,6 +270,20 @@ This page is responsive and can be shown correctly in every screen size.
 ### How to run
 Just open index.html in a web browser. 
 
+### How to test
+
+Tests are defined test.js file. these tests are for following functions:
+- httpGetAsync
+- formatParams
+- formatDateToMonthDay
+
+other functions manipulate HTML base of result of these functions.
+
+you can run the test by opening test.html on the browser. Result prints in Console log. sample result is in a picture below:
+
+![test result sample](public_html/test_sample.png "Test Result Sample").
+
+
 ### potential plans
 - Choose an area to get its weather forecast
 - Show hourly temperature and weather conditions for the next seven days with a click on the day
