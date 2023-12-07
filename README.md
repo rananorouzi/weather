@@ -3,7 +3,7 @@
 ### Description
 This application is programmed with JavaScript. weather data is getting from the 'https://api.open-meteo.com/v1/forecast' API and will show like the picture below:
 
-![result sample](weather_sample.png "Result Sample").
+![result sample](public_html/weather_sample.png "Result Sample").
 
 The default temperature unit is C. You can see temperatures in Farenhite by pressing the F button (at the top-right of the page).
 
