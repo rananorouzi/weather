@@ -122,6 +122,9 @@ const weatherCodes = {
 function httpGetAsync(theUrl, params, callback)
 {
     var paramString = '';
+    if(theUrl == '' || typeof theUrl == 'undefined' || callback == '' || typeof callback == 'undefined'){
+        return false;
+    }
     if(params != ''){
         paramString = formatParams(params);
     }
@@ -133,8 +136,12 @@ function httpGetAsync(theUrl, params, callback)
     }
     xmlHttp.open('GET', urlGetString, true); // true for asynchronous
     xmlHttp.send(null);
+    return true;
 }
 function formatParams( params ){
+    if(typeof params != 'object'){
+        return '';
+    }
     return '?' + Object
             .keys(params)
             .map(function(key){
@@ -188,59 +195,67 @@ function fetchWeatherData(temp){
     }
     httpGetAsync(weatherUrl, weatherParams ,function (data) {
 
-        if(typeof data == 'string'){
+        if(typeof data == 'string' && data != '') {
             data = JSON.parse(data);
-        }
-        d = new Date(data['current']['time']);
-        day = d.getDay();
-        // create current data
-        var currentWeather = {
-            'time' :data['current']['time'],
-            'weather_code' :  data['current']['weather_code'],
-            'weather_code_des' : weatherCodes[data['current']['weather_code']]['name'],
-            'wind_speed' : data['current']['wind_speed_10m'],
-            'wind_speed_unit' : data['current_units']['wind_speed_10m'],
-            'temperature_2m' : data['current']['temperature_2m'],
-            'temp_unit' : data['current_units']['temperature_2m']
-        };
+            // create current data
+            var currentWeather = {
+                'time': data['current']['time'],
+                'weather_code': data['current']['weather_code'],
+                'weather_code_des': weatherCodes[data['current']['weather_code']]['name'],
+                'wind_speed': data['current']['wind_speed_10m'],
+                'wind_speed_unit': data['current_units']['wind_speed_10m'],
+                'temperature_2m': data['current']['temperature_2m'],
+                'temp_unit': data['current_units']['temperature_2m']
+            };
 
-        //create daily data
-        if(typeof data['daily'] == 'object'){
-            var weekWeather = {'forecast':{},'unit':{
-                'max_unit' : data['daily_units']['temperature_2m_max'],
-                'min_unit' : data['daily_units']['temperature_2m_min']
-            }};
-            var weekTimes = data['daily']['time'];
-            var weekdailys = data['daily'];
-            for(var i in weekTimes){
-                weekWeather['forecast'][i] = {
-                    'time' : weekTimes[i],
-                    'weather_code' : weekdailys['weather_code'][i],
-                    'weather_code_des' : weatherCodes[weekdailys['weather_code'][i]]['name'],
-                    'min_temp' : weekdailys['temperature_2m_min'][i],
-                    'max_temp' :weekdailys['temperature_2m_max'][i]
-
+            //create daily data
+            if (typeof data['daily'] == 'object') {
+                var weekWeather = {
+                    'forecast': {}, 'unit': {
+                        'max_unit': data['daily_units']['temperature_2m_max'],
+                        'min_unit': data['daily_units']['temperature_2m_min']
+                    }
                 };
+                var weekTimes = data['daily']['time'];
+                var weekdailys = data['daily'];
+                for (var i in weekTimes) {
+                    weekWeather['forecast'][i] = {
+                        'time': weekTimes[i],
+                        'weather_code': weekdailys['weather_code'][i],
+                        'weather_code_des': weatherCodes[weekdailys['weather_code'][i]]['name'],
+                        'min_temp': weekdailys['temperature_2m_min'][i],
+                        'max_temp': weekdailys['temperature_2m_max'][i]
+
+                    };
+
+                }
+
+                createDailyWeatherHTML(weekWeather);
+            }
+            var hourlyData = [];
+            var hTimes = data['hourly']['time'];
+            for (var h in hTimes) {
+
+                hourlyData[h] = [formatDateToMonthDay(hTimes[h]), data['hourly']['temperature_2m'][h]]
+                i++;
 
             }
-
-            createDailyWeatherHTML(weekWeather);
+            createCurrentWeatherHTML(currentWeather);
+            createChart(hourlyData);
+        }else{
+            document.getElementById('left_col').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3">Fetch data is failed. please try again!</div>';
         }
-        var hourlyData = [];
-        var hTimes = data['hourly']['time'];
-        for(var h in hTimes){
-            d = new Date(hTimes[h]);
-            date = d.getDate()+ ' ' + d.toLocaleString('default', { month: 'long' });
-            hour = d.getHours();
-            hourlyData[h] = [date +' - '+ hour+':00', data['hourly']['temperature_2m'][h] ]
-            i++;
-
-        }
-        createCurrentWeatherHTML(currentWeather);
-        createChart(hourlyData);
     });
 }
-
+function formatDateToMonthDay(date){
+    if(typeof date == 'undefined' || date == ''){
+        return '';
+    }
+    var d = new Date(date);
+    var dateFormatted = d.getDate()+ ' ' + d.toLocaleString('default', { month: 'long' });
+    var hour = d.getHours();
+    return dateFormatted +' - '+ hour+':00';
+}
 function createDailyWeatherHTML(weatherData){
     if(typeof weatherData == 'object'){
         var html = '<section class="daily_forecast_container"><header class="w-full text-black font-sans text-x2 font-bold self-center mb-3">Weekly Highlight</header>' +
@@ -289,16 +304,20 @@ function createDailyWeatherHTML(weatherData){
         document.getElementById("week").innerHTML = html;
 
     }else{
-       return false;
+        document.getElementById('week').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3">Fetch weekly data is failed. please try again!</div>';
     }
+}
+function createTodayDate() {
+    var objToday = new Date();
+    var date = objToday.toDateString();
+    var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var dayOfWeek = weekday[objToday.getDay()];
+    return dayOfWeek+', '+objToday.getHours()+':'+objToday.getMinutes();
 }
 function createCurrentWeatherHTML(weatherData){
     if(typeof weatherData == 'object'){
         var html = '<section class="current_forecast_container"><header class="w-full text-black font-sans text-x2 font-bold self-center mb-3">Current Weather</header><div class="flex">';
-        var objToday = new Date();
-        date = d.toDateString();
-        var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        var dayOfWeek = weekday[objToday.getDay()];
+        var date = createTodayDate();
         var wIcon,wDesc;
         var temp = 'undefined temp';
         var wind = 'undefined wind info';
@@ -319,7 +338,7 @@ function createCurrentWeatherHTML(weatherData){
         html += '<div class="current_forecast w-full">' + wIcon +
                 '<div class="current_temp text-black font-sans text-4xl font-bold mb-1">'+temp+'</div>'+
 
-                '<div class="daily_date text-black font-sans text-x1 font-bold mb-3">'+dayOfWeek+', '+objToday.getHours()+':'+objToday.getMinutes()+'</div>'+
+                '<div class="daily_date text-black font-sans text-x1 font-bold mb-3">'+date+'</div>'+
 
                 '<div class="current_weather_code pb-4 border-b mb-4">'+wDesc+'</div>'+
 
@@ -331,7 +350,8 @@ function createCurrentWeatherHTML(weatherData){
         document.getElementById("current").innerHTML = html;
 
     }else{
-       return false;
+        document.getElementById('current').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3">Fetch current data is failed. please try again!</div>';
+
     }
 }
 
@@ -409,5 +429,7 @@ function createChart(weatherData) {
                 data: weatherData
             }]
         });
+    }else{
+        document.getElementById('chart').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3">Create hourly chart is failed. please try again!</div>';
     }
 }

@@ -24,12 +24,14 @@ This page is responsive and can be shown correctly in every screen size.
         
 - httpGetAsync
     - This function gets the URL and its parameters, then returns its response.
+    - return boolean
     - Parameters
             - theUrl : a url (string) that needs to be fetched
             - params : all parameters for URL as an object
             - callback : function that should be executed as a callback for GET
 - formatParams
     - This function gets an object of parameters and converts it to a string and valid format for URL.
+    - return string
     - Parameters
         - params : an object of all parameters of url. keys are names and values are value of parameters. 
             - example
@@ -257,7 +259,14 @@ This page is responsive and can be shown correctly in every screen size.
                     ]
                 ]
                 ```
-    
+- createTodayDate
+    - This function returns today date and current time
+    - return string
+- formatDateToMonthDay
+    - This function returns formatted date
+    - return string
+    - Parameter
+        - date (date string)
 ### How to run
 Just open index.html in a web browser. 
 
