@@ -18,14 +18,14 @@ This page is responsive and can be shown correctly in every screen size.
 ### Scripts functions
 
 - fetchWeatherData
-    - This function, is the main task on the page. it calls when the page is loaded or when we refresh or ask for another unit of temperature.
+    - This function, is the main task on the page. It would be called when the page is loaded or when user refresh or ask for another unit of temperature.
     - Parameters
-        - temp : temperature unit. it cand be `c` or `f`. if anything else will be sent for function, it will change to `c` .
+        - temp : temperature unit. It can be `c` or `f`. Invalid input is considered as `c` .
         
 - httpGetAsync
     - This function gets the URL and its parameters, then returns its response.
     - Parameters
-            - theUrl : a url (string) that need to be fetched
+            - theUrl : a url (string) that needs to be fetched
             - params : all parameters for URL as an object
             - callback : function that should be executed as a callback for GET
 - formatParams
@@ -45,8 +45,9 @@ This page is responsive and can be shown correctly in every screen size.
                 ```
 - createDailyWeatherHTML
     - This function gets the daily part of the GET response and creates HTML based on it.
-    - weatherData : object contains daily forecast.
-        - example
+    - Parametes
+        - weatherData : object contains daily forecast.
+          - example
             ```javascript
                    {
                     "forecast": {
