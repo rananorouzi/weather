@@ -259,7 +259,7 @@ function formatDateToMonthDay(date){
 function createDailyWeatherHTML(weatherData){
     if(typeof weatherData == 'object'){
         var html = '<section class="daily_forecast_container"><header class="w-full text-black font-sans text-x2 font-bold self-center mb-3">Weekly Highlight</header>' +
-            '<div class="grid grid-cols-3 xl:grid-cols-7 gap-2 overflow-auto py-2 auto-rows-fr">';
+            '<div class="grid grid-cols-3 xl:grid-cols-7 gap-2 py-2 auto-rows-fr">';
         var date,objDay,wIcon,wDesc;
         var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -304,7 +304,7 @@ function createDailyWeatherHTML(weatherData){
         document.getElementById("week").innerHTML = html;
 
     }else{
-        document.getElementById('week').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3">Fetch weekly data is failed. please try again!</div>';
+        document.getElementById('week').innerHTML = '<div class="text-base font-semibold text-rose-500 text-center my-3 w-full">Fetch weekly data is failed. please try again!</div>';
     }
 }
 function createTodayDate() {
