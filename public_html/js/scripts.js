@@ -252,10 +252,12 @@ function createDailyWeatherHTML(weatherData){
         for(var index in weatherData['forecast']){
             var todayWidth  = '';
             var todayDegWidth = '';
+            var minTemp = '';
+            var maxTemp = '';
             if(index == 0){
                 date = 'Today';
                 todayWidth = 'max-xl:col-span-3';
-                todayDegWidth = 'lg:w-2/5 md:w-2/5 div_center';
+                todayDegWidth = 'max-xl:w-2/5 div_center';
             }else{
                 objDay = new Date(weatherData['forecast'][index]['time']);
                 date = weekday[objDay.getDay()]+', '+months[objDay.getMonth()]+' '+objDay.getDate();
@@ -267,10 +269,20 @@ function createDailyWeatherHTML(weatherData){
                 wIcon = weatherCodes[weatherData['forecast'][index]['weather_code']]['icon'];
                 wDesc = weatherData['forecast'][index]['weather_code_des'];
             }
+            if(typeof weatherCodes[weatherData['forecast'][index]['weather_code']] == 'undefined'){
+                wIcon = weatherCodes['undefined']['icon'];
+                wDesc = 'undefined data';
+            }
+            if(typeof weatherData['forecast'][index]['max_temp'] != 'undefined' && typeof weatherData['unit']['max_unit'] != 'undefined'){
+                maxTemp = weatherData['forecast'][index]['max_temp']+weatherData['unit']['max_unit'];
+            }
+            if(typeof weatherData['forecast'][index]['min_temp'] != 'undefined' && typeof weatherData['unit']['min_unit'] != 'undefined'){
+                minTemp = weatherData['forecast'][index]['min_temp']+weatherData['unit']['min_unit'];
+            }
             html += '<div class="text-center daily_forecast p-3 h-full border border-gray-200 rounded shadow '+todayWidth+'">' +
                 '<div class="daily_date font-bold mb-2">'+date+'</div>'+ wIcon +
                 '<div class="daily_weather_code py-3">'+wDesc+'</div>'+
-                '<div class="daily_temp text-sm flex justify-between '+todayDegWidth+'"><span class="max text-gray-800 max-md:inline-block max-md:w-full">'+weatherData['forecast'][index]['max_temp']+weatherData['unit']['max_unit']+'</span><span class="min text-gray-400 pl-3 max-md:pl-0">'+weatherData['forecast'][index]['min_temp']+weatherData['unit']['min_unit']+'</span> </div>'+
+                '<div class="daily_temp text-sm flex justify-between '+todayDegWidth+'"><span class="max text-gray-800 max-md:inline-block">'+maxTemp+'</span><span class="min text-gray-400 pl-3 max-md:pl-0">'+minTemp+'</span> </div>'+
                 '</div>';
         }
         html += '</div></section>';
@@ -288,6 +300,8 @@ function createCurrentWeatherHTML(weatherData){
         var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         var dayOfWeek = weekday[objToday.getDay()];
         var wIcon,wDesc;
+        var temp = 'undefined temp';
+        var wind = 'undefined wind info';
         if(typeof weatherCodes[weatherData['weather_code']] == 'undefined'){
             wIcon = weatherCodes['undefined']['icon'];
             wDesc = 'undefined data';
@@ -295,8 +309,15 @@ function createCurrentWeatherHTML(weatherData){
             wIcon = weatherCodes[weatherData['weather_code']]['icon'];
             wDesc = weatherData['weather_code_des'];
         }
+
+        if(typeof weatherData['temperature_2m'] != 'undefined' && typeof weatherData['temp_unit'] != 'undefined'){
+            temp = weatherData['temperature_2m']+weatherData['temp_unit'];
+        }
+        if(typeof weatherData['wind_speed'] != 'undefined' && typeof weatherData['wind_speed_unit'] != 'undefined'){
+            wind = weatherData['wind_speed']+weatherData['wind_speed_unit'];
+        }
         html += '<div class="current_forecast w-full">' + wIcon +
-                '<div class="current_temp text-black font-sans text-4xl font-bold mb-1">'+weatherData['temperature_2m']+weatherData['temp_unit']+'</div>'+
+                '<div class="current_temp text-black font-sans text-4xl font-bold mb-1">'+temp+'</div>'+
 
                 '<div class="daily_date text-black font-sans text-x1 font-bold mb-3">'+dayOfWeek+', '+objToday.getHours()+':'+objToday.getMinutes()+'</div>'+
 
@@ -304,7 +325,7 @@ function createCurrentWeatherHTML(weatherData){
 
                 '<div class="current_wind">'+
                 '<svg class="inline-block pr-2" width="25px" height="25px" viewBox="-5.7 -5.7 41.40 41.40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#f26418" stroke="#f26418" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.3"></g><g id="SVGRepo_iconCarrier"> <title>wind-flag</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke-width="0.00030000000000000003" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-467.000000, -778.000000)" fill="#ff0000"> <path d="M495,780 L491,779.637 L491,791.363 L495,791 C496.104,791 497,790.104 497,789 L497,782 C497,780.896 496.104,780 495,780 L495,780 Z M483,792.091 L489,791.546 L489,779.455 L483,778.909 L483,792.091 L483,792.091 Z M471,780 L471,791 C471,792.104 471.896,793 473,793 L481,792.272 L481,778.728 L473,778 C471.896,778 471,778.896 471,780 L471,780 Z M468,778 C467.447,778 467,778.448 467,779 L467,807 C467,807.553 467.447,808 468,808 C468.553,808 469,807.553 469,807 L469,779 C469,778.448 468.553,778 468,778 L468,778 Z" id="wind-flag" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>'+
-                'Wind speed: '+weatherData['wind_speed']+weatherData['wind_speed_unit']+'</div>'+
+                'Wind speed: '+wind+'</div>'+
                 '</div>';
         html += '</div></section>';
         document.getElementById("current").innerHTML = html;
